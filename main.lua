@@ -1,38 +1,63 @@
+local bit = bit
 local math = math
 local fenster = require('fenster')
 
-local map_width = 24
-local map_height = 24
+-- Define the world map
+--local map_width = 24
+--local map_height = 24
 local world_map = {
-	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 3, 0, 3, 0, 3, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2, 0, 0, 0, 0, 3, 0, 3, 0, 3, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 4, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 4, 0, 0, 0, 0, 5, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 4, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 4, 0, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-	{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+	{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7 },
+	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7 },
+	{ 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7 },
+	{ 4, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7 },
+	{ 4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7 },
+	{ 4, 0, 4, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 0, 7, 7, 7, 7, 7 },
+	{ 4, 0, 5, 0, 0, 0, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 7, 0, 0, 0, 7, 7, 7, 1 },
+	{ 4, 0, 6, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 0, 0, 0, 8 },
+	{ 4, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 1 },
+	{ 4, 0, 8, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 0, 0, 0, 8 },
+	{ 4, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 7, 7, 7, 1 },
+	{ 4, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 0, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 1 },
+	{ 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 },
+	{ 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
+	{ 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 },
+	{ 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 6, 0, 6, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 },
+	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2 },
+	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 0, 0, 5, 0, 0, 2, 0, 0, 0, 2 },
+	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2 },
+	{ 4, 0, 6, 0, 6, 0, 0, 0, 0, 4, 6, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 2 },
+	{ 4, 0, 0, 5, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2 },
+	{ 4, 0, 6, 0, 6, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 5, 0, 0, 2, 0, 0, 0, 2 },
+	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2 },
+	{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 },
 }
+
+-- Define/calculate the textures
+local texture_width = 64
+local texture_height = 64
+local texture = { {}, {}, {}, {}, {}, {}, {}, {} } ---@type table<integer, table<integer, integer>>
+for y = 0, texture_height - 1 do
+	for x = 0, texture_width - 1 do
+		local xor_color = bit.bxor(math.floor(x * 256 / texture_width), math.floor(y * 256 / texture_height))
+		--local x_color = math.floor(x * 256 / texture_width)
+		local y_color = math.floor(y * 256 / texture_height)
+		local xy_color = math.floor(y * 128 / texture_height + x * 128 / texture_width)
+
+		local i = texture_height * y + x + 1
+		texture[1][i] = 65536 * 254 * ((x ~= y and x ~= texture_width - y) and 1 or 0) -- flat red with black cross
+		texture[2][i] = xy_color + 256 * xy_color + 65536 * xy_color -- sloped greyscale
+		texture[3][i] = 256 * xy_color + 65536 * xy_color -- sloped yellow gradient
+		texture[4][i] = xor_color + 256 * xor_color + 65536 * xor_color -- xor greyscale
+		texture[5][i] = 256 * xor_color -- xor green
+		texture[6][i] = 65536 * 192 * ((x % 16 > 0 and y % 16 > 0) and 1 or 0) -- red bricks
+		texture[7][i] = 65536 * y_color -- red gradient
+		texture[8][i] = 128 + 256 * 128 + 65536 * 128 -- flat grey texture
+	end
+end
 
 -- Initial position
 local pos_x = 22 ---@type number
-local pos_y = 12 ---@type number
+local pos_y = 11.5 ---@type number
 
 -- Initial direction vector
 local dir_x = -1 ---@type number
@@ -183,22 +208,47 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 			draw_end = window_height - 1
 		end
 
-		-- Choose wall color and give x and y sides different brightness
-		local color ---@type integer
-		if world_map[map_x + 1][map_y + 1] == 1 then
-			color = side == 1 and 0x7F0000 or 0xFF0000 -- red
-		elseif world_map[map_x + 1][map_y + 1] == 2 then
-			color = side == 1 and 0x007F00 or 0x00FF00 -- green
-		elseif world_map[map_x + 1][map_y + 1] == 3 then
-			color = side == 1 and 0x00007F or 0x0000FF -- blue
-		elseif world_map[map_x + 1][map_y + 1] == 4 then
-			color = side == 1 and 0x7F7F7F or 0xFFFFFF -- white
+		-- Get texture to use
+		local texture_num = world_map[map_x + 1][map_y + 1] -- We DON'T subtract 1 because Lua arrays are 1-indexed
+
+		-- Calculate value of wall_x
+		local wall_x ---@type number
+		if side == 0 then
+			wall_x = pos_y + perp_wall_dist * ray_dir_y
 		else
-			color = side == 1 and 0x7F7F00 or 0xFFFF00 -- yellow
+			wall_x = pos_x + perp_wall_dist * ray_dir_x
+		end
+		wall_x = wall_x - math.floor(wall_x)
+
+		-- X coordinate on the texture
+		local texture_x = math.floor(wall_x * texture_width)
+		if side == 0 and ray_dir_x > 0 then
+			texture_x = texture_width - texture_x - 1
+		end
+		if side == 1 and ray_dir_y < 0 then
+			texture_x = texture_width - texture_x - 1
 		end
 
-		-- Draw the pixels of the stripe as a vertical line
+		-- How much to increase the texture coordinate per screen pixel
+		local step = texture_height / line_height
+
+		-- Starting texture coordinate
+		local texture_pos = (draw_start - window_height / 2 + line_height / 2) * step
+
 		for y = draw_start, draw_end do
+			-- Floor the texture coordinate and mask with (texture_height - 1) in case of overflow
+			local texture_y = bit.band(math.floor(texture_pos), texture_height - 1)
+			texture_pos = texture_pos + step
+
+			-- Get the color of the texture
+			local color = texture[texture_num][texture_height * texture_y + texture_x + 1]
+
+			-- Make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+			if side == 1 then
+				color = bit.band(bit.rshift(color, 1), 0x7F7F7F)
+			end
+
+			-- Draw the pixel
 			window:set(x, y, color)
 		end
 	end
