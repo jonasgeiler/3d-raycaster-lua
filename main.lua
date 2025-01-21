@@ -43,22 +43,22 @@ local plane_x = 0 ---@type number
 local plane_y = 0.66 ---@type number
 
 -- Create a window
-local window = fenster.open(640, 480, '3D Raycaster - Press ESC to exit, arrow keys to move', 2)
+local window_width = 640
+local window_height = 480
+local window_scale = 2
+local window = fenster.open(
+	window_width,
+	window_height,
+	'3D Raycaster - Press ESC to exit, arrow keys to move',
+	window_scale
+)
 
 -- Main window loop
-while window:loop() and not window.keys[27] do
+while window:loop() and not window.keys[27] do -- Exit on ESC
 	window:clear()
 
 	-- Timing for input and FPS counter
 	local delta_time = window.delta
-
-	-- FPS counter
-	local fps = math.floor(1 / delta_time)
-	for x = 0, math.min(120, fps) do
-		window:set(x, 0, 0x00ff00)
-	end
-	window:set(30, 0, 0x0000ff)
-	window:set(60, 0, 0xff0000)
 
 	-- Speed modifiers
 	local move_speed = delta_time * 5.0 -- The constant value is in squares/second
@@ -102,9 +102,9 @@ while window:loop() and not window.keys[27] do
 	end
 
 	-- Raycasting loop
-	for x = 0, window.width - 1 do
+	for x = 0, window_width - 1 do
 		-- Calculate ray position and direction
-		local camera_x = 2 * x / window.width - 1 -- x-coordinate in camera space
+		local camera_x = 2 * x / window_width - 1 -- x-coordinate in camera space
 		local ray_dir_x = dir_x + plane_x * camera_x
 		local ray_dir_y = dir_y + plane_y * camera_x
 
@@ -117,8 +117,8 @@ while window:loop() and not window.keys[27] do
 		local side_dist_y ---@type number
 
 		-- Length of ray from one x or y-side to next x or y-side
-		local delta_dist_x = ray_dir_x == 0 and 1e30 or math.abs(1 / ray_dir_x)
-		local delta_dist_y = ray_dir_y == 0 and 1e30 or math.abs(1 / ray_dir_y)
+		local delta_dist_x = ray_dir_x == 0 and math.huge or math.abs(1 / ray_dir_x)
+		local delta_dist_y = ray_dir_y == 0 and math.huge or math.abs(1 / ray_dir_y)
 
 		local perp_wall_dist ---@type number
 
@@ -171,16 +171,16 @@ while window:loop() and not window.keys[27] do
 		end
 
 		-- Calculate height of line to draw on screen
-		local line_height = math.floor(window.height / perp_wall_dist)
+		local line_height = math.floor(window_height / perp_wall_dist)
 
 		-- Calculate lowest and highest pixel to fill in current stripe
-		local draw_start = math.floor(-line_height / 2 + window.height / 2)
+		local draw_start = math.floor(-line_height / 2 + window_height / 2)
 		if draw_start < 0 then
 			draw_start = 0
 		end
-		local draw_end = math.floor(line_height / 2 + window.height / 2)
-		if draw_end >= window.height then
-			draw_end = window.height - 1
+		local draw_end = math.floor(line_height / 2 + window_height / 2)
+		if draw_end >= window_height then
+			draw_end = window_height - 1
 		end
 
 		-- Choose wall color and give x and y sides different brightness
@@ -202,4 +202,12 @@ while window:loop() and not window.keys[27] do
 			window:set(x, y, color)
 		end
 	end
+
+	-- FPS counter
+	local fps = math.floor(1 / delta_time)
+	for x = 0, math.min(120, fps) do
+		window:set(x, 0, 0x00ff00)
+	end
+	window:set(30, 0, 0x0000ff)
+	window:set(60, 0, 0xff0000)
 end
