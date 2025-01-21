@@ -24,3 +24,8 @@
 /lua
 /lua_modules
 /.luarocks
+
+# Tutorial files
+*.cpp
+*.h
+*.out

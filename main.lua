@@ -1,6 +1,7 @@
 local bit = bit
 local math = math
 local fenster = require('fenster')
+local utils = require('lib.utils')
 
 -- Define the world map
 --local map_width = 24
@@ -77,6 +78,8 @@ local window = fenster.open(
 	'3D Raycaster - Press ESC to exit, arrow keys to move',
 	window_scale
 )
+local window_width_half = math.floor(window_width / 2)
+local window_height_half = math.floor(window_height / 2)
 
 -- Main window loop
 while window:loop() and not window.keys[27] do -- Exit on ESC
@@ -199,13 +202,13 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 		local line_height = math.floor(window_height / perp_wall_dist)
 
 		-- Calculate lowest and highest pixel to fill in current stripe
-		local draw_start = math.floor(-line_height / 2 + window_height / 2)
+		local draw_start = utils.trunc(-line_height / 2) + window_height_half
 		if draw_start < 0 then
 			draw_start = 0
 		end
-		local draw_end = math.floor(line_height / 2 + window_height / 2)
+		local draw_end = math.floor(line_height / 2) + window_height_half
 		if draw_end >= window_height then
-			draw_end = window_height - 1
+			draw_end = window_height
 		end
 
 		-- Get texture to use
@@ -233,9 +236,9 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 		local step = texture_height / line_height
 
 		-- Starting texture coordinate
-		local texture_pos = (draw_start - window_height / 2 + line_height / 2) * step
+		local texture_pos = (draw_start - window_height_half + line_height / 2) * step
 
-		for y = draw_start, draw_end do
+		for y = draw_start, draw_end - 1 do
 			-- Floor the texture coordinate and mask with (texture_height - 1) in case of overflow
 			local texture_y = bit.band(math.floor(texture_pos), texture_height - 1)
 			texture_pos = texture_pos + step
@@ -253,7 +256,7 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 		end
 	end
 
-	-- FPS counter
+	-- FPS counter for debug
 	local fps = math.floor(1 / delta_time)
 	for x = 0, math.min(120, fps) do
 		window:set(x, 0, 0x00ff00)
