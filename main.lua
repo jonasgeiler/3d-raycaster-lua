@@ -62,7 +62,6 @@ local pos_y = 11.5 ---@type number
 -- Initial direction vector
 local dir_x = -1 ---@type number
 local dir_y = 0 ---@type number
-local pitch = 100 ---@type number
 
 -- The 2D raycaster version of camera plane
 local plane_x = 0 ---@type number
@@ -89,7 +88,6 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 	-- Speed modifiers
 	local move_speed = delta_time * 5.0 -- The constant value is in squares/second
 	local rot_speed = delta_time * 3.0 -- The constant value is in radians/second
-	local pitch_speed = delta_time * 300.0
 
 	-- Handle input
 	local keys = window.keys
@@ -126,12 +124,6 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 		local old_plane_x = plane_x ---@type number
 		plane_x = plane_x * math.cos(rot_speed) - plane_y * math.sin(rot_speed)
 		plane_y = old_plane_x * math.sin(rot_speed) + plane_y * math.cos(rot_speed)
-	end
-	if keys[87] then -- W key, look up
-		pitch = pitch + pitch_speed
-	end
-	if keys[83] then -- S key, look down
-		pitch = pitch - pitch_speed
 	end
 
 	-- Raycasting loop
@@ -207,11 +199,11 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 		local line_height = math.floor(window_height / perp_wall_dist)
 
 		-- Calculate lowest and highest pixel to fill in current stripe
-		local draw_start = math.floor(-line_height / 2 + window_height / 2 + pitch)
+		local draw_start = math.floor(-line_height / 2 + window_height / 2)
 		if draw_start < 0 then
 			draw_start = 0
 		end
-		local draw_end = math.floor(line_height / 2 + window_height / 2 + pitch)
+		local draw_end = math.floor(line_height / 2 + window_height / 2)
 		if draw_end >= window_height then
 			draw_end = window_height - 1
 		end
@@ -241,7 +233,7 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 		local step = texture_height / line_height
 
 		-- Starting texture coordinate
-		local texture_pos = (draw_start - pitch - window_height / 2 + line_height / 2) * step
+		local texture_pos = (draw_start - window_height / 2 + line_height / 2) * step
 
 		for y = draw_start, draw_end do
 			-- Floor the texture coordinate and mask with (texture_height - 1) in case of overflow
