@@ -2,6 +2,7 @@ local bit = bit
 local math = math
 local fenster = require('fenster')
 local utils = require('lib.utils')
+local ppm = require('lib.ppm')
 
 -- Define the world map
 --local map_width = 24
@@ -33,28 +34,18 @@ local world_map = {
 	{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 },
 }
 
--- Define/calculate the textures
+-- Define/load the textures
 local texture_width = 64
 local texture_height = 64
 local texture = { {}, {}, {}, {}, {}, {}, {}, {} } ---@type table<integer, table<integer, integer>>
-for y = 0, texture_height - 1 do
-	for x = 0, texture_width - 1 do
-		local xor_color = bit.bxor(math.floor(x * 256 / texture_width), math.floor(y * 256 / texture_height))
-		--local x_color = math.floor(x * 256 / texture_width)
-		local y_color = math.floor(y * 256 / texture_height)
-		local xy_color = math.floor(y * 128 / texture_height + x * 128 / texture_width)
-
-		local i = texture_height * y + x + 1
-		texture[1][i] = 65536 * 254 * ((x ~= y and x ~= texture_width - y) and 1 or 0) -- flat red with black cross
-		texture[2][i] = xy_color + 256 * xy_color + 65536 * xy_color -- sloped greyscale
-		texture[3][i] = 256 * xy_color + 65536 * xy_color -- sloped yellow gradient
-		texture[4][i] = xor_color + 256 * xor_color + 65536 * xor_color -- xor greyscale
-		texture[5][i] = 256 * xor_color -- xor green
-		texture[6][i] = 65536 * 192 * ((x % 16 > 0 and y % 16 > 0) and 1 or 0) -- red bricks
-		texture[7][i] = 65536 * y_color -- red gradient
-		texture[8][i] = 128 + 256 * 128 + 65536 * 128 -- flat grey texture
-	end
-end
+texture[1] = ppm.load('assets/eagle.ppm')
+texture[2] = ppm.load('assets/redbrick.ppm')
+texture[3] = ppm.load('assets/purplestone.ppm')
+texture[4] = ppm.load('assets/greystone.ppm')
+texture[5] = ppm.load('assets/bluestone.ppm')
+texture[6] = ppm.load('assets/mossy.ppm')
+texture[7] = ppm.load('assets/wood.ppm')
+texture[8] = ppm.load('assets/colorstone.ppm')
 
 -- Initial position
 local pos_x = 22 ---@type number
