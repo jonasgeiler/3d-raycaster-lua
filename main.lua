@@ -69,7 +69,7 @@ local window = fenster.open(
 	'3D Raycaster - Press ESC to exit, arrow keys to move',
 	window_scale
 )
-local window_width_half = math.floor(window_width / 2)
+--local window_width_half = math.floor(window_width / 2)
 local window_height_half = math.floor(window_height / 2)
 
 -- Main window loop
