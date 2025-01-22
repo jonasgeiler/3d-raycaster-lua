@@ -7,6 +7,12 @@ local fenster = require('fenster')
 
 local ppm = {}
 
+---Load a PPM image.
+---@param path string
+---@return table<integer, integer>
+---@return integer
+---@return integer
+---@nodiscard
 function ppm.load(path)
 	local image = assert(io.open(path, 'rb'))
 

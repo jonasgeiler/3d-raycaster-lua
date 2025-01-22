@@ -29,3 +29,4 @@
 *.cpp
 *.h
 *.out
+/pics/
