@@ -77,7 +77,7 @@ local window = fenster.open(
 local window_height_half = math.floor(window_height / 2)
 
 -- Main window loop
-while window:loop() and not window.keys[27] do -- Exit on ESC
+while window:loop() do
 	-- Timing for input and FPS counter
 	local delta_time = window.delta
 
@@ -87,6 +87,9 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 
 	-- Handle input
 	local keys = window.keys
+	if keys[27] then -- Esc, exit when pressed
+		break
+	end
 	if keys[17] then -- Up arrow, move forward if no wall in front of you
 		if world_map[math.floor(pos_x + dir_x * move_speed) + 1][math.floor(pos_y) + 1] == 0 then
 			pos_x = pos_x + dir_x * move_speed
