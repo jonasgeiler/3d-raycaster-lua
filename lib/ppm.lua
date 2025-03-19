@@ -9,7 +9,7 @@ local ppm = {}
 
 ---Load a PPM image.
 ---@param path string
----@return table<integer, integer>
+---@return integer[]
 ---@return integer
 ---@return integer
 ---@nodiscard
@@ -32,7 +32,7 @@ function ppm.load(path)
 	)
 	assert(image:read(1), 'Invalid image header') -- Whitespace
 
-	local image_buffer = {}
+	local image_buffer = {} ---@type integer[]
 	while true do
 		local r_raw = image:read(1)
 		local g_raw = image:read(1)

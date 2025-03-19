@@ -8,30 +8,30 @@ local ppm = require('lib.ppm')
 --local map_width = 24
 --local map_height = 24
 local world_map = {
-	{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7 },
-	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7 },
-	{ 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7 },
-	{ 4, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7 },
-	{ 4, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 7 },
-	{ 4, 0, 4, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 0, 7, 7, 7, 7, 7 },
-	{ 4, 0, 5, 0, 0, 0, 0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 7, 0, 0, 0, 7, 7, 7, 1 },
-	{ 4, 0, 6, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 0, 0, 0, 8 },
-	{ 4, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 1 },
-	{ 4, 0, 8, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 0, 0, 0, 8 },
-	{ 4, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 5, 7, 0, 0, 0, 7, 7, 7, 1 },
-	{ 4, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 0, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 1 },
-	{ 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 },
-	{ 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
-	{ 6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 },
-	{ 4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 6, 0, 6, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 },
-	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2 },
-	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 0, 0, 5, 0, 0, 2, 0, 0, 0, 2 },
-	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2 },
-	{ 4, 0, 6, 0, 6, 0, 0, 0, 0, 4, 6, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 2 },
-	{ 4, 0, 0, 5, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 2, 0, 2, 2 },
-	{ 4, 0, 6, 0, 6, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 5, 0, 0, 2, 0, 0, 0, 2 },
-	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 0, 6, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2 },
-	{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 },
+	{ 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 6, 4, 4, 6, 4, 6, 4, 4, 4, 6, 4 },
+	{ 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
+	{ 8, 0, 3, 3, 0, 0, 0, 0, 0, 8, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+	{ 8, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+	{ 8, 0, 3, 3, 0, 0, 0, 0, 0, 8, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
+	{ 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 4, 0, 0, 0, 0, 0, 6, 6, 6, 0, 6, 4, 6 },
+	{ 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 4, 4, 4, 4, 4, 4, 6, 0, 0, 0, 0, 0, 6 },
+	{ 7, 7, 7, 7, 0, 7, 7, 7, 7, 0, 8, 0, 8, 0, 8, 0, 8, 4, 0, 4, 0, 6, 0, 6 },
+	{ 7, 7, 0, 0, 0, 0, 0, 0, 7, 8, 0, 8, 0, 8, 0, 8, 8, 6, 0, 0, 0, 0, 0, 6 },
+	{ 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 0, 0, 0, 0, 0, 4 },
+	{ 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 0, 6, 0, 6, 0, 6 },
+	{ 7, 7, 0, 0, 0, 0, 0, 0, 7, 8, 0, 8, 0, 8, 0, 8, 8, 6, 4, 6, 0, 6, 6, 6 },
+	{ 7, 7, 7, 7, 0, 7, 7, 7, 7, 8, 8, 4, 0, 6, 8, 4, 8, 3, 3, 3, 0, 3, 3, 3 },
+	{ 2, 2, 2, 2, 0, 2, 2, 2, 2, 4, 6, 4, 0, 0, 6, 0, 6, 3, 0, 0, 0, 0, 0, 3 },
+	{ 2, 2, 0, 0, 0, 0, 0, 2, 2, 4, 0, 0, 0, 0, 0, 0, 4, 3, 0, 0, 0, 0, 0, 3 },
+	{ 2, 0, 0, 0, 0, 0, 0, 0, 2, 4, 0, 0, 0, 0, 0, 0, 4, 3, 0, 0, 0, 0, 0, 3 },
+	{ 1, 0, 0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 4, 4, 6, 0, 6, 3, 3, 0, 0, 0, 3, 3 },
+	{ 2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 1, 2, 2, 2, 6, 6, 0, 0, 5, 0, 5, 0, 5 },
+	{ 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 0, 5, 0, 5, 0, 0, 0, 5, 5 },
+	{ 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 5, 0, 5, 0, 5, 0, 5, 0, 5 },
+	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5 },
+	{ 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 5, 0, 5, 0, 5, 0, 5, 0, 5 },
+	{ 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 0, 5, 0, 5, 0, 0, 0, 5, 5 },
+	{ 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5 },
 }
 
 -- Define/load the textures
@@ -46,6 +46,8 @@ texture[5] = ppm.load('assets/bluestone.ppm')
 texture[6] = ppm.load('assets/mossy.ppm')
 texture[7] = ppm.load('assets/wood.ppm')
 texture[8] = ppm.load('assets/colorstone.ppm')
+local floor_texture = texture[4]
+local ceiling_texture = texture[7]
 
 -- Initial position
 local pos_x = 22 ---@type number
@@ -60,9 +62,11 @@ local plane_x = 0 ---@type number
 local plane_y = 0.66 ---@type number
 
 -- Create a window
-local window_width = 640
-local window_height = 480
-local window_scale = 2
+local window_width = 320
+assert(window_width % 2 == 0, 'Window width must be even')
+local window_height = 240
+assert(window_height % 2 == 0, 'Window height must be even')
+local window_scale = 4
 local window = fenster.open(
 	window_width,
 	window_height,
@@ -74,14 +78,12 @@ local window_height_half = math.floor(window_height / 2)
 
 -- Main window loop
 while window:loop() and not window.keys[27] do -- Exit on ESC
-	window:clear()
-
 	-- Timing for input and FPS counter
 	local delta_time = window.delta
 
 	-- Speed modifiers
-	local move_speed = delta_time * 5.0 -- The constant value is in squares/second
-	local rot_speed = delta_time * 3.0 -- The constant value is in radians/second
+	local move_speed = delta_time * 3.0 -- The constant value is in squares/second
+	local rot_speed = delta_time * 2.0 -- The constant value is in radians/second
 
 	-- Handle input
 	local keys = window.keys
@@ -120,7 +122,58 @@ while window:loop() and not window.keys[27] do -- Exit on ESC
 		plane_y = old_plane_x * math.sin(rot_speed) + plane_y * math.cos(rot_speed)
 	end
 
-	-- Raycasting loop
+	-- Floor/Ceiling raycasting loop
+	for y = 0, window_height - 1 do
+		-- Ray direction for leftmost ray (x = 0) and rightmost ray (x = w)
+		local ray_dir_x0 = dir_x - plane_x
+		local ray_dir_y0 = dir_y - plane_y
+		local ray_dir_x1 = dir_x + plane_x
+		local ray_dir_y1 = dir_y + plane_y
+
+		-- Current Y position compared to the center of the screen (the horizon)
+		local p = y - window_height_half
+
+		-- Vertical position of the camera
+		local pos_z = window_height_half ---@type number
+
+		-- Horizontal distance from the camera to the floor for the current row
+		-- (0.5 is the z position exactly in the middle between floor and ceiling)
+		local row_distance = pos_z / p
+
+		-- Calculate the real world step vector we have to add for each x (parallel to camera plane)
+		-- adding step by step avoids multiplications with a weight in the inner loop
+		local floor_step_x = row_distance * (ray_dir_x1 - ray_dir_x0) / window_width
+		local floor_step_y = row_distance * (ray_dir_y1 - ray_dir_y0) / window_width
+
+		-- Real world coordinates of the leftmost column - this will be updated as we step through the columns
+		local floor_x = pos_x + row_distance * ray_dir_x0
+		local floor_y = pos_y + row_distance * ray_dir_y0
+
+		for x = 0, window_width - 1 do
+			-- The cell coord is simply got from the integer parts of floor_x and floor_y
+			local cell_x = math.floor(floor_x)
+			local cell_y = math.floor(floor_y)
+
+			-- Get the texture coordinate from the fractional part
+			local texture_x = bit.band(math.floor(texture_width * (floor_x - cell_x)), texture_width - 1)
+			local texture_y = bit.band(math.floor(texture_height * (floor_y - cell_y)), texture_height - 1)
+
+			floor_x = floor_x + floor_step_x
+			floor_y = floor_y + floor_step_y
+
+			-- Draw floor
+			local color = floor_texture[texture_height * texture_y + texture_x + 1]
+			color = bit.band(bit.rshift(color, 1), 0x7F7F7F)
+			window:set(x, y, color)
+
+			-- Draw ceiling (symmetrical, at window_height - y - 1 instead of y)
+			color = ceiling_texture[texture_height * texture_y + texture_x + 1]
+			color = bit.band(bit.rshift(color, 1), 0x7F7F7F)
+			window:set(x, window_height - y - 1, color)
+		end
+	end
+
+	-- Wall raycasting loop
 	for x = 0, window_width - 1 do
 		-- Calculate ray position and direction
 		local camera_x = 2 * x / window_width - 1 -- x-coordinate in camera space
