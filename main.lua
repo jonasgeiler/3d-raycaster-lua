@@ -437,11 +437,13 @@ while window:loop() do
 		end
 	end
 
-	-- FPS counter for debug
+	-- Draw lightweight FPS indicator
+	--[[
 	local fps = math.floor(1 / delta_time)
 	for x = 0, math.min(120, fps) do
 		window:set(x, 0, 0x00ff00)
 	end
 	window:set(30, 0, 0x0000ff)
 	window:set(60, 0, 0xff0000)
+	]]--
 end
