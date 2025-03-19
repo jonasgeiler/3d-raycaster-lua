@@ -12,4 +12,4 @@ Following a tutorial by [Lode][lode] about [3D raycasting][raycasting].
 
 ## Screenshot
 
-![image](https://github.com/user-attachments/assets/9a0cc025-5eb9-44d8-b637-12e921c1c12c)
+![image](https://github.com/user-attachments/assets/3fad4457-6bf0-41a7-95c1-d5b71aca7757)

@@ -4,9 +4,27 @@ local fenster = require('fenster')
 local utils = require('lib.utils')
 local ppm = require('lib.ppm')
 
+-- Define/load the textures
+local texture_width ---@type integer
+local texture_height ---@type integer
+local texture = {} ---@type table<integer, integer[]>
+texture[1], texture_width, texture_height = ppm.load('assets/eagle.ppm')
+texture[2] = ppm.load('assets/redbrick.ppm')
+texture[3] = ppm.load('assets/purplestone.ppm')
+texture[4] = ppm.load('assets/greystone.ppm')
+texture[5] = ppm.load('assets/bluestone.ppm')
+texture[6] = ppm.load('assets/mossy.ppm')
+texture[7] = ppm.load('assets/wood.ppm')
+texture[8] = ppm.load('assets/colorstone.ppm')
+texture[9] = ppm.load('assets/barrel.ppm')
+texture[10] = ppm.load('assets/pillar.ppm')
+texture[11] = ppm.load('assets/greenlight.ppm')
+texture[12] = ppm.load('assets/house.ppm')
+local floor_texture = texture[4]
+local ceiling_texture = texture[7]
+
 -- Define the world map
---local map_width = 24
---local map_height = 24
+---@type integer[][] 2D array with 0 for empty space and other numbers for specific wall textures as defined above
 local world_map = {
 	{ 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 6, 4, 4, 6, 4, 6, 4, 4, 4, 6, 4 },
 	{ 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4 },
@@ -33,21 +51,42 @@ local world_map = {
 	{ 2, 2, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 2, 2, 0, 5, 0, 5, 0, 0, 0, 5, 5 },
 	{ 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5 },
 }
+--local map_width = #world_map[1]
+--local map_height = #world_map
 
--- Define/load the textures
-local texture_width = 64
-local texture_height = 64
-local texture = { {}, {}, {}, {}, {}, {}, {}, {} } ---@type table<integer, table<integer, integer>>
-texture[1] = ppm.load('assets/eagle.ppm')
-texture[2] = ppm.load('assets/redbrick.ppm')
-texture[3] = ppm.load('assets/purplestone.ppm')
-texture[4] = ppm.load('assets/greystone.ppm')
-texture[5] = ppm.load('assets/bluestone.ppm')
-texture[6] = ppm.load('assets/mossy.ppm')
-texture[7] = ppm.load('assets/wood.ppm')
-texture[8] = ppm.load('assets/colorstone.ppm')
-local floor_texture = texture[4]
-local ceiling_texture = texture[7]
+-- Define sprites
+---@type [number, number, integer][] Array with [x, y, texture] for each sprite - textures are as defined above
+local sprites = {
+	-- Green light in front of playerstart
+	{ 20.5, 11.5, 11 },
+
+	-- Green lights in every room
+	{ 18.5, 4.5,  11 },
+	{ 10.0, 4.5,  11 },
+	{ 10.0, 12.5, 11 },
+	{ 3.5,  6.5,  11 },
+	{ 3.5,  20.5, 11 },
+	{ 3.5,  14.5, 11 },
+	{ 14.5, 20.5, 11 },
+
+	-- Row of pillars in front of wall (fisheye test)
+	{ 18.5, 10.5, 10 },
+	{ 18.5, 11.5, 10 },
+	{ 18.5, 12.5, 10 },
+
+	-- Some barrels around the map
+	{ 21.5, 1.5,  9 },
+	{ 15.5, 1.5,  9 },
+	{ 16.0, 1.8,  9 },
+	{ 16.2, 1.2,  9 },
+	{ 9.5,  15.5, 9 },
+	{ 10.0, 15.1, 9 },
+	{ 10.5, 15.8, 9 },
+
+	-- Easter egg
+	{ 3.5,  2.5,  12 },
+}
+local num_sprites = #sprites
 
 -- Initial position
 local pos_x = 22 ---@type number
@@ -73,8 +112,15 @@ local window = fenster.open(
 	'3D Raycaster - Press ESC to exit, arrow keys to move',
 	window_scale
 )
---local window_width_half = math.floor(window_width / 2)
+local window_width_half = math.floor(window_width / 2)
 local window_height_half = math.floor(window_height / 2)
+
+-- Init Z-Buffer, a 1D array to keep track of the depth of the pixels
+local z_buffer = {} ---@type number[]
+
+-- Arrays used to sort the sprites
+local sprite_order = {} ---@type integer[]
+local sprite_distance = {} ---@type number[]
 
 -- Main window loop
 while window:loop() do
@@ -300,6 +346,94 @@ while window:loop() do
 
 			-- Draw the pixel
 			window:set(x, y, color)
+		end
+
+		-- Set Z-buffer for the sprite casting
+		z_buffer[x + 1] = perp_wall_dist
+	end
+
+	-- Sprite sorting
+	for i = 1, num_sprites do
+		sprite_order[i] = i
+		sprite_distance[i] = (pos_x - sprites[i][1]) ^ 2 + (pos_y - sprites[i][2]) ^ 2
+	end
+	local swapped = true
+	while swapped do
+		swapped = false
+
+		-- Sort the sprites based on distance
+		for i = 1, num_sprites - 1 do -- Substract 1 because we compare the current sprite and the next one
+			if sprite_distance[i] < sprite_distance[i + 1] then
+				sprite_distance[i], sprite_distance[i + 1] = sprite_distance[i + 1], sprite_distance[i]
+				sprite_order[i], sprite_order[i + 1] = sprite_order[i + 1], sprite_order[i]
+				swapped = true
+			end
+		end
+	end
+
+	-- Sprite drawing
+	for i = 1, num_sprites do
+		-- Translate sprite position to relative to camera
+		local sprite_x = sprites[sprite_order[i]][1] - pos_x
+		local sprite_y = sprites[sprite_order[i]][2] - pos_y
+
+		-- Inverse camera matrix
+		local inv_det = 1.0 / (plane_x * dir_y - dir_x * plane_y) -- Required for correct matrix multiplication
+
+		-- Transform sprite with the inverse camera matrix
+		-- (These are actually the depth inside the screen, that what Z is in 3D)
+		local transform_x = inv_det * (dir_y * sprite_x - dir_x * sprite_y)
+		local transform_y = inv_det * (-plane_y * sprite_x + plane_x * sprite_y)
+
+		-- Calculate width/height of the sprite on screen
+		local sprite_size = math.abs(utils.trunc(window_height / transform_y)) -- Using "transform_y" instead of the real distance prevents fisheye
+
+		-- Calculate lowest and highest pixel to fill in current stripe
+		local draw_start_y = utils.trunc(-sprite_size / 2) + window_height_half
+		if draw_start_y < 0 then
+			draw_start_y = 0
+		end
+		local draw_end_y = math.floor(sprite_size / 2) + window_height_half
+		if draw_end_y >= window_height then
+			draw_end_y = window_height
+		end
+
+		local sprite_screen_x = utils.trunc(window_width_half * (1 + transform_x / transform_y))
+
+		-- Calculate lowest and highest pixel to fill in current stripe
+		local draw_start_x = utils.trunc(-sprite_size / 2) + sprite_screen_x
+		if draw_start_x < 0 then
+			draw_start_x = 0
+		end
+		local draw_end_x = math.floor(sprite_size / 2) + sprite_screen_x
+		if draw_end_x >= window_width then
+			draw_end_x = window_width
+		end
+
+		-- Loop through every vertical stripe of the sprite on screen
+		for stripe = draw_start_x, draw_end_x - 1 do
+			local texture_x = math.floor(
+				math.floor(256 * (stripe - (-sprite_size / 2 + sprite_screen_x)) * texture_width / sprite_size) / 256
+			)
+
+			-- The conditions in the if are:
+			-- 1) It's in front of camera plane so you don't see things behind you
+			-- 2) It's on the screen (left)
+			-- 3) It's on the screen (right)
+			-- 4) Z-buffer, with perpendicular distance
+			if transform_y > 0 and stripe > 0 and stripe < window_width and transform_y < z_buffer[stripe + 1] then
+				-- For every pixel of the current stripe
+				for y = draw_start_y, draw_end_y - 1 do
+					local d = y * 256 - window_height * 128 + sprite_size * 128 -- 256 and 128 factors to avoid floats
+					local texture_y = math.floor(((d * texture_height) / sprite_size) / 256)
+
+					-- Get the color from the texture
+					local color = texture[sprites[sprite_order[i]][3]][texture_height * texture_y + texture_x + 1]
+					if color ~= 0 then -- Paint pixel if it isn't black, black is the invisible color
+						window:set(stripe, y, color)
+					end
+				end
+			end
 		end
 	end
 
