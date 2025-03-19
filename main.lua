@@ -125,7 +125,7 @@ while window:loop() do
 		plane_y = old_plane_x * math.sin(rot_speed) + plane_y * math.cos(rot_speed)
 	end
 
-	-- Floor/Ceiling raycasting loop
+	-- Floor/Ceiling raycasting
 	for y = 0, window_height - 1 do
 		-- Ray direction for leftmost ray (x = 0) and rightmost ray (x = w)
 		local ray_dir_x0 = dir_x - plane_x
@@ -141,7 +141,7 @@ while window:loop() do
 
 		-- Horizontal distance from the camera to the floor for the current row
 		-- (0.5 is the z position exactly in the middle between floor and ceiling)
-		local row_distance = pos_z / p
+		local row_distance = p == 0 and 0 or pos_z / p
 
 		-- Calculate the real world step vector we have to add for each x (parallel to camera plane)
 		-- adding step by step avoids multiplications with a weight in the inner loop
@@ -154,12 +154,12 @@ while window:loop() do
 
 		for x = 0, window_width - 1 do
 			-- The cell coord is simply got from the integer parts of floor_x and floor_y
-			local cell_x = math.floor(floor_x)
-			local cell_y = math.floor(floor_y)
+			local cell_x = utils.trunc(floor_x)
+			local cell_y = utils.trunc(floor_y)
 
 			-- Get the texture coordinate from the fractional part
-			local texture_x = bit.band(math.floor(texture_width * (floor_x - cell_x)), texture_width - 1)
-			local texture_y = bit.band(math.floor(texture_height * (floor_y - cell_y)), texture_height - 1)
+			local texture_x = bit.band(utils.trunc(texture_width * (floor_x - cell_x)), texture_width - 1)
+			local texture_y = bit.band(utils.trunc(texture_height * (floor_y - cell_y)), texture_height - 1)
 
 			floor_x = floor_x + floor_step_x
 			floor_y = floor_y + floor_step_y
@@ -176,7 +176,7 @@ while window:loop() do
 		end
 	end
 
-	-- Wall raycasting loop
+	-- Wall raycasting
 	for x = 0, window_width - 1 do
 		-- Calculate ray position and direction
 		local camera_x = 2 * x / window_width - 1 -- x-coordinate in camera space
