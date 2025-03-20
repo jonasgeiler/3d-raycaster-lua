@@ -24,9 +24,14 @@ However, the Wolfenstein 3D textures I have used in this project are copyrighted
 ## Requirements
 
 - LuaJIT 2.1 (_**highly recommended**_) or Lua 5.1 (newer Lua versions might work but not tested)
+  > **💡 Tip:** On Arch Linux, you can easily install both with `pacman -S luajit lua51`.
 - If you use standard Lua 5.1, you will also need the [Lua BitOp extension](https://bitop.luajit.org/), which is already included in LuaJIT 2.1
   > **💡 Tip:** On Arch Linux, you can easily install it with `pacman -S lua51-bitop`.
 - [LuaRocks](https://luarocks.org/)
+  > **💡 Tip:** On Arch Linux, you can easily install it with `pacman -S luarocks`.
+  >
+  > **💬 Important:** Make sure you configure LuaRocks to use Lua 5.1 (even when you use LuaJIT 2.1)
+  > by either using the `--lua-version=5.1` flag every time, or by configuring it with `luarocks config lua_version 5.1`.
 
 ## How to try
 
