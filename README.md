@@ -1,7 +1,7 @@
 # 3d-raycaster-lua
 
 > A Wolfenstein-like 3D raycaster written in Lua using
-> using [lua-fenster](https://github.com/jonasgeiler/lua-fenster).
+> [lua-fenster](https://github.com/jonasgeiler/lua-fenster).
 
 I wanted to learn more about how a simple 3D raycaster works, similar to the one Wolfenstein 3D used back in the day,
 so I followed a tutorial by [Lode][lode] about [Raycasting][raycasting].
